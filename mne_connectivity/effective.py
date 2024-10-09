@@ -172,12 +172,12 @@ def phase_slope_index(
     # allocate space for output
     out_shape = list(cohy.shape)
     out_shape[freq_dim] = n_bands
-    psi = np.zeros(out_shape, dtype=np.float64)
+    psi = np.zeros(out_shape, dtype=np.float32)
 
     # allocate accumulator
     acc_shape = copy.copy(out_shape)
     acc_shape.pop(freq_dim)
-    acc = np.empty(acc_shape, dtype=np.complex128)
+    acc = np.empty(acc_shape, dtype=np.complex64)
 
     # create list for frequencies used and frequency bands
     # of resulting connectivity data

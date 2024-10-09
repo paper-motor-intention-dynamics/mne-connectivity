@@ -61,7 +61,7 @@ class _CohEstBase(_EpochMeanConEstBase):
         super().__init__(n_cons, n_freqs, n_times)
 
         # allocate space for accumulation of CSD
-        self._acc = np.zeros(self.csd_shape, dtype=np.complex128)
+        self._acc = np.zeros(self.csd_shape, dtype=np.complex64)
 
     def accumulate(self, con_idx, csd_xy):
         """Accumulate CSD for some connections."""
@@ -89,7 +89,7 @@ class _CohyEst(_CohEstBase):
     def compute_con(self, con_idx, n_epochs, psd_xx, psd_yy):  # lgtm
         """Compute final con. score for some connections."""
         if self.con_scores is None:
-            self.con_scores = np.zeros(self.csd_shape, dtype=np.complex128)
+            self.con_scores = np.zeros(self.csd_shape, dtype=np.complex64)
         csd_mean = self._acc[con_idx] / n_epochs
         self.con_scores[con_idx] = csd_mean / np.sqrt(psd_xx * psd_yy)
 
@@ -117,7 +117,7 @@ class _PLVEst(_EpochMeanConEstBase):
         super().__init__(n_cons, n_freqs, n_times)
 
         # allocate accumulator
-        self._acc = np.zeros(self.csd_shape, dtype=np.complex128)
+        self._acc = np.zeros(self.csd_shape, dtype=np.complex64)
 
     def accumulate(self, con_idx, csd_xy):
         """Accumulate some connections."""
@@ -141,7 +141,7 @@ class _ciPLVEst(_EpochMeanConEstBase):
         super().__init__(n_cons, n_freqs, n_times)
 
         # allocate accumulator
-        self._acc = np.zeros(self.csd_shape, dtype=np.complex128)
+        self._acc = np.zeros(self.csd_shape, dtype=np.complex64)
 
     def accumulate(self, con_idx, csd_xy):
         """Accumulate some connections."""
@@ -321,7 +321,7 @@ class _PPCEst(_EpochMeanConEstBase):
         super().__init__(n_cons, n_freqs, n_times)
 
         # store csd / abs(csd)
-        self._acc = np.zeros(self.csd_shape, dtype=np.complex128)
+        self._acc = np.zeros(self.csd_shape, dtype=np.complex64)
 
     def accumulate(self, con_idx, csd_xy):
         """Accumulate some connections."""

@@ -116,7 +116,7 @@ def _compute_freqs(n_times, sfreq, cwt_freqs, mode):
         if cwt_freqs is None:
             raise ValueError("define frequencies of interest using cwt_freqs")
         else:
-            cwt_freqs = cwt_freqs.astype(np.float64)
+            cwt_freqs = cwt_freqs.astype(np.float32)
         if any(cwt_freqs > (sfreq / 2.0)):
             raise ValueError(
                 "entries in cwt_freqs cannot be larger than Nyquist (sfreq / 2)"

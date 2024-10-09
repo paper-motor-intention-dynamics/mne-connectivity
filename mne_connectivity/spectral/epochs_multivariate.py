@@ -126,7 +126,7 @@ class _EpochMeanMultivariateConEstBase(_AbstractConEstBase):
     con_scores = None
     patterns = None
     filters = None
-    con_scores_dtype = np.float64
+    con_scores_dtype = np.float32
 
     def __init__(
         self,
@@ -151,7 +151,7 @@ class _EpochMeanMultivariateConEstBase(_AbstractConEstBase):
 
         # allocate space for accumulation of CSD
         csd_shape = (n_signals**2, n_freqs, 1 if n_times == 0 else n_times)
-        self._acc = np.zeros(csd_shape, dtype=np.complex128)
+        self._acc = np.zeros(csd_shape, dtype=np.complex64)
         if n_times == 0:
             self._acc = np.squeeze(self._acc, axis=-1)
 
@@ -413,7 +413,7 @@ class _MultivariateCohEstBase(_EpochMeanMultivariateConEstBase):
         See Eq. 3 of Ewald et al. (2012). NeuroImage. DOI:
         10.1016/j.neuroimage.2011.11.084.
         """
-        T = np.zeros_like(C_r, dtype=np.float64)
+        T = np.zeros_like(C_r, dtype=np.float32)
         times = np.arange(C_r.shape[0])
         freqs = np.arange(C_r.shape[1])
         seeds = np.arange(n_seeds)
@@ -558,7 +558,7 @@ class _CaCohEst(_MultivariateCohEstBase):
     """
 
     name = "CaCoh"
-    con_scores_dtype = np.complex128  # CaCoh is complex-valued
+    con_scores_dtype = np.complex64  # CaCoh is complex-valued
 
     def _compute_con_daughter(
         self, seed_idcs, target_idcs, C, C_bar, U_bar_aa, U_bar_bb, con_i
@@ -1119,12 +1119,12 @@ class _GCEstBase(_EpochMeanMultivariateConEstBase):
         m = A.shape[1]
         I_n = np.eye(n)
         I_m = np.eye(m)
-        H = np.zeros((h, t, n, n), dtype=np.complex128)
+        H = np.zeros((h, t, n, n), dtype=np.complex64)
 
         parallel, parallel_compute_H, _ = parallel_func(
             _gc_compute_H, self.n_jobs, verbose=False
         )
-        H = np.zeros((h, t, n, n), dtype=np.complex128)
+        H = np.zeros((h, t, n, n), dtype=np.complex64)
         for block_i in ProgressBar(range(self.n_steps), mesg="frequency blocks"):
             freqs = self._get_block_indices(block_i, self.n_freqs)
             H[freqs] = parallel(
@@ -1161,7 +1161,7 @@ def _gc_compute_H(A, C, K, z_k, I_n, I_m):
     """
     from scipy import linalg  # XXX: is this necessary???
 
-    H = np.zeros((A.shape[0], C.shape[1], C.shape[1]), dtype=np.complex128)
+    H = np.zeros((A.shape[0], C.shape[1], C.shape[1]), dtype=np.complex64)
     for t in range(A.shape[0]):
         H[t] = I_n + (C[t] @ linalg.lu_solve(linalg.lu_factor(z_k * I_m - A[t]), K[t]))
 
